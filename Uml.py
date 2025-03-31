@@ -19,21 +19,22 @@ abstract class Mascota {
   +setEdad(edad: int): void
   +setAltura(altura: float): void
   +setPeso(peso: float): void
+  +getTratamientos(): List<Tratamiento>
 }
 
-class Perro {
+class Perro extends Mascota {
   -raza: String
   +getRaza(): String
   +setRaza(raza: String): void
 }
 
-class Gato {
+class Gato extends Mascota {
   -raza: String
   +getRaza(): String
   +setRaza(raza: String): void
 }
 
-class Loro {
+class Loro extends Mascota {
   -especie: String
   +getEspecie(): String
   +setEspecie(especie: String): void
@@ -52,11 +53,7 @@ class Dueno {
   +getTelefono(): String
   +getDireccion(): String
   +getEmail(): String
-  +setNombre(nombre: String): void
-  +setApellido(apellido: String): void
-  +setTelefono(telefono: String): void
-  +setDireccion(direccion: String): void
-  +setEmail(email: String): void
+  +agregarMascota(mascota: Mascota): void
   +obtenerPerros(): List<Perro>
   +obtenerHistorialTratamientos(): List<Tratamiento>
 }
@@ -74,13 +71,9 @@ class Doctor {
   +getEspecialidad(): String
   +getTelefono(): String
   +getEmail(): String
-  +setNombre(nombre: String): void
-  +setApellido(apellido: String): void
-  +setEspecialidad(especialidad: String): void
-  +setTelefono(telefono: String): void
-  +setEmail(email: String): void
-  +obtenerMascotasAtendidas(): List<Mascota>
-  +obtenerTratamientosRealizados(): List<Tratamiento>
+  +agregarTratamiento(tratamiento: Tratamiento): void
+  +getMascotasAtendidas(): List<Mascota>
+  +getTratamientosRealizados(): List<Tratamiento>
 }
 
 abstract class Tratamiento {
@@ -95,21 +88,22 @@ abstract class Tratamiento {
   +setFecha(fecha: Date): void
   +setCosto(costo: float): void
   +setDescripcion(descripcion: String): void
+  +agregarDoctor(doctor: Doctor): void
 }
 
-class Vacunacion {
+class Vacunacion extends Tratamiento {
   -tipoVacuna: String
   +getTipoVacuna(): String
   +setTipoVacuna(tipoVacuna: String): void
 }
 
-class Desparasitacion {
+class Desparasitacion extends Tratamiento {
   -tipoDesparasitante: String
   +getTipoDesparasitante(): String
   +setTipoDesparasitante(tipoDesparasitante: String): void
 }
 
-class Cirugia {
+class Cirugia extends Tratamiento {
   -tipoCirugia: String
   -duracion: int
   +getTipoCirugia(): String
@@ -118,7 +112,7 @@ class Cirugia {
   +setDuracion(duracion: int): void
 }
 
-class ChequeoGeneral {
+class ChequeoGeneral extends Tratamiento {
   -resultados: String
   +getResultados(): String
   +setResultados(resultados: String): void
@@ -136,16 +130,16 @@ Mascota <|-- Gato
 Mascota <|-- Loro
 
 Dueno "1" -- "0..*" Mascota : posee >
+Mascota "1" -- "0..*" Tratamiento : recibe >
 
 Tratamiento <|-- Vacunacion
 Tratamiento <|-- Desparasitacion
 Tratamiento <|-- Cirugia
 Tratamiento <|-- ChequeoGeneral
 
-Mascota "1" -- "0..*" Tratamiento : recibe >
-
+Tratamiento "0..*" -- "1" Mascota : pertenece a
 Doctor "1..*" -- "0..*" Tratamiento
-(Doctor, Tratamiento) .. DoctorTratamiento
+(Doctor, Tratamiento) .. DoctorTratamiento : Relación muchos a muchos
 
 @enduml
 """
@@ -155,26 +149,7 @@ with open("pet_health.puml", "w") as file:
     file.write(uml_content)
 
 print("Diagrama UML generado en formato PlantUML.")
-print("\nExplicación del diagrama:")
-print("1. Clases principales:")
-print("   - Mascota (abstracta): Clase base para todos los tipos de mascotas")
-print("   - Perro, Gato, Loro: Subclases específicas de Mascota")
-print("   - Dueno: Representa al propietario de las mascotas")
-print("   - Doctor: Representa a los veterinarios")
-print("   - Tratamiento (abstracta): Clase base para todos los tipos de tratamientos")
-print("   - Vacunacion, Desparasitacion, Cirugia, ChequeoGeneral: Subclases específicas de Tratamiento")
-print("   - DoctorTratamiento: Clase de asociación para la relación muchos a muchos entre Doctor y Tratamiento")
-print("\n2. Relaciones:")
-print("   - Un Dueño puede tener muchas Mascotas, pero una Mascota pertenece a un único Dueño")
-print("   - Una Mascota puede recibir muchos Tratamientos")
-print("   - Un Doctor puede realizar muchos Tratamientos y un Tratamiento puede involucrar a varios Doctores")
-print("\n3. Funcionalidades implementadas:")
-print("   - Dado un doctor, búsqueda de todas las mascotas que ha atendido: método obtenerMascotasAtendidas()")
-print("   - Dado un doctor, búsqueda de todos los tratamientos realizados: método obtenerTratamientosRealizados()")
-print("   - Dado un dueño, búsqueda de todos sus perros: método obtenerPerros()")
-print("   - Dado un dueño, búsqueda del historial de tratamientos de todas sus mascotas: método obtenerHistorialTratamientos()")
-print("   - Para buscar mascotas por tipo de tratamiento, se puede implementar una consulta a través de las relaciones existentes")
 
-#Para visualizar el diagrama, normalmente se usaría:
+# Para visualizar el diagrama, normalmente se usaría:
 plantuml = PlantUML(url='http://www.plantuml.com/plantuml/img/')
 plantuml.processes_file('pet_health.puml')

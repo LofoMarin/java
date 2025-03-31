@@ -15,21 +15,22 @@ abstract class Mascota {
   +setEdad(edad: int): void
   +setAltura(altura: float): void
   +setPeso(peso: float): void
+  +getTratamientos(): List<Tratamiento>
 }
 
-class Perro {
+class Perro extends Mascota {
   -raza: String
   +getRaza(): String
   +setRaza(raza: String): void
 }
 
-class Gato {
+class Gato extends Mascota {
   -raza: String
   +getRaza(): String
   +setRaza(raza: String): void
 }
 
-class Loro {
+class Loro extends Mascota {
   -especie: String
   +getEspecie(): String
   +setEspecie(especie: String): void
@@ -48,11 +49,7 @@ class Dueno {
   +getTelefono(): String
   +getDireccion(): String
   +getEmail(): String
-  +setNombre(nombre: String): void
-  +setApellido(apellido: String): void
-  +setTelefono(telefono: String): void
-  +setDireccion(direccion: String): void
-  +setEmail(email: String): void
+  +agregarMascota(mascota: Mascota): void
   +obtenerPerros(): List<Perro>
   +obtenerHistorialTratamientos(): List<Tratamiento>
 }
@@ -70,13 +67,9 @@ class Doctor {
   +getEspecialidad(): String
   +getTelefono(): String
   +getEmail(): String
-  +setNombre(nombre: String): void
-  +setApellido(apellido: String): void
-  +setEspecialidad(especialidad: String): void
-  +setTelefono(telefono: String): void
-  +setEmail(email: String): void
-  +obtenerMascotasAtendidas(): List<Mascota>
-  +obtenerTratamientosRealizados(): List<Tratamiento>
+  +agregarTratamiento(tratamiento: Tratamiento): void
+  +getMascotasAtendidas(): List<Mascota>
+  +getTratamientosRealizados(): List<Tratamiento>
 }
 
 abstract class Tratamiento {
@@ -91,21 +84,22 @@ abstract class Tratamiento {
   +setFecha(fecha: Date): void
   +setCosto(costo: float): void
   +setDescripcion(descripcion: String): void
+  +agregarDoctor(doctor: Doctor): void
 }
 
-class Vacunacion {
+class Vacunacion extends Tratamiento {
   -tipoVacuna: String
   +getTipoVacuna(): String
   +setTipoVacuna(tipoVacuna: String): void
 }
 
-class Desparasitacion {
+class Desparasitacion extends Tratamiento {
   -tipoDesparasitante: String
   +getTipoDesparasitante(): String
   +setTipoDesparasitante(tipoDesparasitante: String): void
 }
 
-class Cirugia {
+class Cirugia extends Tratamiento {
   -tipoCirugia: String
   -duracion: int
   +getTipoCirugia(): String
@@ -114,7 +108,7 @@ class Cirugia {
   +setDuracion(duracion: int): void
 }
 
-class ChequeoGeneral {
+class ChequeoGeneral extends Tratamiento {
   -resultados: String
   +getResultados(): String
   +setResultados(resultados: String): void
@@ -132,15 +126,15 @@ Mascota <|-- Gato
 Mascota <|-- Loro
 
 Dueno "1" -- "0..*" Mascota : posee >
+Mascota "1" -- "0..*" Tratamiento : recibe >
 
 Tratamiento <|-- Vacunacion
 Tratamiento <|-- Desparasitacion
 Tratamiento <|-- Cirugia
 Tratamiento <|-- ChequeoGeneral
 
-Mascota "1" -- "0..*" Tratamiento : recibe >
-
+Tratamiento "0..*" -- "1" Mascota : pertenece a
 Doctor "1..*" -- "0..*" Tratamiento
-(Doctor, Tratamiento) .. DoctorTratamiento
+(Doctor, Tratamiento) .. DoctorTratamiento : Relación muchos a muchos
 
 @enduml
