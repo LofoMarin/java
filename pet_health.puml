@@ -1,0 +1,146 @@
+
+@startuml Pet Health System
+
+' Definición de clases principales
+abstract class Mascota {
+  -nombre: String
+  -edad: int
+  -altura: float
+  -peso: float
+  +getNombre(): String
+  +getEdad(): int
+  +getAltura(): float
+  +getPeso(): float
+  +setNombre(nombre: String): void
+  +setEdad(edad: int): void
+  +setAltura(altura: float): void
+  +setPeso(peso: float): void
+}
+
+class Perro {
+  -raza: String
+  +getRaza(): String
+  +setRaza(raza: String): void
+}
+
+class Gato {
+  -raza: String
+  +getRaza(): String
+  +setRaza(raza: String): void
+}
+
+class Loro {
+  -especie: String
+  +getEspecie(): String
+  +setEspecie(especie: String): void
+}
+
+class Dueno {
+  -id: int
+  -nombre: String
+  -apellido: String
+  -telefono: String
+  -direccion: String
+  -email: String
+  +getId(): int
+  +getNombre(): String
+  +getApellido(): String
+  +getTelefono(): String
+  +getDireccion(): String
+  +getEmail(): String
+  +setNombre(nombre: String): void
+  +setApellido(apellido: String): void
+  +setTelefono(telefono: String): void
+  +setDireccion(direccion: String): void
+  +setEmail(email: String): void
+  +obtenerPerros(): List<Perro>
+  +obtenerHistorialTratamientos(): List<Tratamiento>
+}
+
+class Doctor {
+  -id: int
+  -nombre: String
+  -apellido: String
+  -especialidad: String
+  -telefono: String
+  -email: String
+  +getId(): int
+  +getNombre(): String
+  +getApellido(): String
+  +getEspecialidad(): String
+  +getTelefono(): String
+  +getEmail(): String
+  +setNombre(nombre: String): void
+  +setApellido(apellido: String): void
+  +setEspecialidad(especialidad: String): void
+  +setTelefono(telefono: String): void
+  +setEmail(email: String): void
+  +obtenerMascotasAtendidas(): List<Mascota>
+  +obtenerTratamientosRealizados(): List<Tratamiento>
+}
+
+abstract class Tratamiento {
+  -id: int
+  -fecha: Date
+  -costo: float
+  -descripcion: String
+  +getId(): int
+  +getFecha(): Date
+  +getCosto(): float
+  +getDescripcion(): String
+  +setFecha(fecha: Date): void
+  +setCosto(costo: float): void
+  +setDescripcion(descripcion: String): void
+}
+
+class Vacunacion {
+  -tipoVacuna: String
+  +getTipoVacuna(): String
+  +setTipoVacuna(tipoVacuna: String): void
+}
+
+class Desparasitacion {
+  -tipoDesparasitante: String
+  +getTipoDesparasitante(): String
+  +setTipoDesparasitante(tipoDesparasitante: String): void
+}
+
+class Cirugia {
+  -tipoCirugia: String
+  -duracion: int
+  +getTipoCirugia(): String
+  +getDuracion(): int
+  +setTipoCirugia(tipoCirugia: String): void
+  +setDuracion(duracion: int): void
+}
+
+class ChequeoGeneral {
+  -resultados: String
+  +getResultados(): String
+  +setResultados(resultados: String): void
+}
+
+class DoctorTratamiento {
+  -rol: String
+  +getRol(): String
+  +setRol(rol: String): void
+}
+
+' Relaciones entre clases
+Mascota <|-- Perro
+Mascota <|-- Gato
+Mascota <|-- Loro
+
+Dueno "1" -- "0..*" Mascota : posee >
+
+Tratamiento <|-- Vacunacion
+Tratamiento <|-- Desparasitacion
+Tratamiento <|-- Cirugia
+Tratamiento <|-- ChequeoGeneral
+
+Mascota "1" -- "0..*" Tratamiento : recibe >
+
+Doctor "1..*" -- "0..*" Tratamiento
+(Doctor, Tratamiento) .. DoctorTratamiento
+
+@enduml
